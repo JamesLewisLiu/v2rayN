@@ -16,7 +16,7 @@ jobs:
       - name: Submit v2ray package to Windows Package Manager Community Repository
         run: |
 
-          $wingetPackage = "2dust.v2rayN"
+          $wingetPackage = "2dust.sing-box"
           $gitToken = "${{ secrets.PT_WINGET }}"
 
           $headers = @{ Authorization = "Bearer $gitToken"; Accept = "application/vnd.github+json" }
@@ -26,8 +26,8 @@ jobs:
           $targetRelease = $github | Where-Object -Property prerelease -match 'False' | Select -First 1
           
           $assets = $targetRelease | Select -ExpandProperty assets -First 1
-          $x64InstallerUrl = $assets | Where-Object { $_.name -eq 'v2rayN-windows-64.zip' } | Select -ExpandProperty browser_download_url
-          $arm64InstallerUrl = $assets | Where-Object { $_.name -eq 'v2rayN-windows-arm64.zip' } | Select -ExpandProperty browser_download_url
+          $x64InstallerUrl = $assets | Where-Object { $_.name -eq 'sing-box-windows-64.zip' } | Select -ExpandProperty browser_download_url
+          $arm64InstallerUrl = $assets | Where-Object { $_.name -eq 'sing-box-windows-arm64.zip' } | Select -ExpandProperty browser_download_url
 
           if (-not $x64InstallerUrl -or -not $arm64InstallerUrl) {
             throw "Could not find required installers in release assets."

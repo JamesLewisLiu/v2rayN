@@ -1,4 +1,4 @@
-# v2rayN
+# sing-box
 
 ### A GUI client for Windows, Linux and macOS. Support [Xray](https://github.com/XTLS/Xray-core) and [sing-box](https://github.com/SagerNet/sing-box) and [others](https://github.com/2dust/v2rayN/wiki/List-of-supported-cores)
 
@@ -21,12 +21,12 @@ Download the latest release here:
 
 在这里下载最新版本：
 
-[https://github.com/2dust/v2rayN/releases](https://github.com/2dust/v2rayN/releases)
+[sing-box releases / 下载](https://github.com/2dust/v2rayN/releases)
 
 
 > [!TIP]
-> v2rayN is the desktop version. For the mobile version, please visit the v2rayNG \
-> v2rayN 是电脑版，手机版请访问 v2rayNG
+> sing-box is the desktop version. For the mobile version, please visit the v2rayNG \
+> sing-box 是电脑版，手机版请访问 v2rayNG
 >
 > https://github.com/2dust/v2rayNG
 
@@ -38,7 +38,7 @@ Read the Wiki for usage guides and configuration details.
 
 请阅读 Wiki 获取使用说明和配置教程。
 
-[https://github.com/2dust/v2rayN/wiki](https://github.com/2dust/v2rayN/wiki)
+[sing-box Wiki / 使用文档](https://github.com/2dust/v2rayN/wiki)
 
 ---
 
@@ -73,7 +73,7 @@ Release files are signed with GPG to verify authenticity and integrity, helping 
 
 Telegram Group / Telegram 群组：
 
-[https://t.me/v2rayN](https://t.me/v2rayN)
+[Telegram Group / Telegram 群组](https://t.me/v2rayN)
 
 Telegram Channel / Telegram 频道：
 

@@ -9,8 +9,8 @@ XRAY_VER="${XRAY_VER:-}"
 SING_VER="${SING_VER:-}"
 
 MIN_KERNEL="5.10"
-PKGROOT="v2rayN-publish"
-PROJECT_HINT="v2rayN.Desktop/v2rayN.Desktop.csproj"
+PKGROOT="sing-box-publish"
+PROJECT_HINT="sing-box.Desktop/sing-box.Desktop.csproj"
 OUTPUT_DIR="${HOME}/debbuild"
 DOTNET_RISCV_VERSION="10.0.111"
 DOTNET_RISCV_BASE="https://github.com/xujiegb/dotnet-riscv/releases/download"
@@ -135,8 +135,8 @@ prepare_workspace() {
   fi
 
   PROJECT="$PROJECT_HINT"
-  [[ -f "$PROJECT" ]] || PROJECT="$(find . -maxdepth 3 -name 'v2rayN.Desktop.csproj' | head -n1 || true)"
-  [[ -f "$PROJECT" ]] || die "v2rayN.Desktop.csproj not found"
+  [[ -f "$PROJECT" ]] || PROJECT="$(find . -maxdepth 3 -name 'sing-box.Desktop.csproj' | head -n1 || true)"
+  [[ -f "$PROJECT" ]] || die "sing-box.Desktop.csproj not found"
 }
 
 choose_channel() {
@@ -153,7 +153,7 @@ choose_channel() {
   fi
 
   if [[ -t 0 ]]; then
-    echo "[?] Choose v2rayN release channel:" >&2
+    echo "[?] Choose sing-box release channel:" >&2
     echo "    1) Latest (stable)  [default]" >&2
     echo "    2) Pre-release (preview)" >&2
     echo "    3) Keep current (do nothing)" >&2
@@ -409,11 +409,11 @@ populate_assets_zip_mode() {
 
   url="$(bundle_url_for_rid "$rid")" || { echo "[!] Bundle unsupported RID: $rid"; return 1; }
 
-  echo "[+] Try v2rayN bundle archive: $url"
+  echo "[+] Try sing-box bundle archive: $url"
 
   tmp="$(mktemp -d)"
-  curl -fL "$url" -o "$tmp/v2rayn.zip" || { echo "[!] Bundle download failed"; rm -rf "$tmp"; return 1; }
-  unzip -q "$tmp/v2rayn.zip" -d "$tmp" || { echo "[!] Bundle unzip failed"; rm -rf "$tmp"; return 1; }
+  curl -fL "$url" -o "$tmp/sing-box.zip" || { echo "[!] Bundle download failed"; rm -rf "$tmp"; return 1; }
+  unzip -q "$tmp/sing-box.zip" -d "$tmp" || { echo "[!] Bundle unzip failed"; rm -rf "$tmp"; return 1; }
 
   if [[ -d "$tmp/bin" ]]; then
     mkdir -p "$outroot/bin"
@@ -422,7 +422,7 @@ populate_assets_zip_mode() {
     rsync -a "$tmp/" "$outroot/"
   fi
 
-  rm -f "$outroot/v2rayn.zip" 2>/dev/null || true
+  rm -f "$outroot/sing-box.zip" 2>/dev/null || true
   find "$outroot" -type d -name "mihomo" -prune -exec rm -rf {} + 2>/dev/null || true
 
   nested_dir="$(find "$outroot" -maxdepth 1 -type d -name 'v2rayN-linux-*' | head -n1 || true)"
@@ -463,7 +463,7 @@ stage_runtime_assets() {
 
   if [[ "$FORCE_NETCORE" -eq 0 ]]; then
     if populate_assets_zip_mode "$outroot" "$rid"; then
-      echo "[*] Using v2rayN bundle archive."
+      echo "[*] Using sing-box bundle archive."
     else
       echo "[*] Bundle failed, fallback to separate core + rules."
       populate_assets_netcore_mode "$outroot" "$rid"
@@ -495,23 +495,23 @@ publish_binary() {
 write_launcher_file() {
   local stage="$1"
 
-  install -m 755 /dev/stdin "$stage/usr/bin/v2rayn" <<'EOF'
+  install -m 755 /dev/stdin "$stage/usr/bin/sing-box" <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
-DIR="/opt/v2rayN"
+DIR="/opt/sing-box"
 cd "$DIR"
 
-if [[ -x "$DIR/v2rayN" ]]; then
-  exec "$DIR/v2rayN" "$@"
+if [[ -x "$DIR/sing-box" ]]; then
+  exec "$DIR/sing-box" "$@"
 fi
 
-for dll in v2rayN.Desktop.dll v2rayN.dll; do
+for dll in sing-box.Desktop.dll sing-box.dll; do
   if [[ -f "$DIR/$dll" ]]; then
     exec /usr/bin/dotnet "$DIR/$dll" "$@"
   fi
 done
 
-echo "v2rayN launcher: no executable found in $DIR" >&2
+echo "sing-box launcher: no executable found in $DIR" >&2
 ls -l "$DIR" >&2 || true
 exit 1
 EOF
@@ -520,13 +520,13 @@ EOF
 write_desktop_file() {
   local stage="$1"
 
-  install -m 644 /dev/stdin "$stage/usr/share/applications/v2rayn.desktop" <<'EOF'
+  install -m 644 /dev/stdin "$stage/usr/share/applications/sing-box.desktop" <<'EOF'
 [Desktop Entry]
 Type=Application
-Name=v2rayN
-Comment=v2rayN for Debian GNU Linux
-Exec=v2rayn
-Icon=v2rayn
+Name=sing-box
+Comment=sing-box for Debian GNU Linux
+Exec=sing-box
+Icon=sing-box
 Terminal=false
 Categories=Network;
 EOF
@@ -583,14 +583,14 @@ package_binary() {
   stage="$workdir/${PKGROOT}_${VERSION}_${deb_arch}"
   debian_dir="$stage/DEBIAN"
 
-  mkdir -p "$stage/opt/v2rayN" "$stage/usr/bin" "$stage/usr/share/applications" "$stage/usr/share/icons/hicolor/256x256/apps" "$debian_dir"
-  cp -a "$pubdir/." "$stage/opt/v2rayN/"
+  mkdir -p "$stage/opt/sing-box" "$stage/usr/bin" "$stage/usr/share/applications" "$stage/usr/share/icons/hicolor/256x256/apps" "$debian_dir"
+  cp -a "$pubdir/." "$stage/opt/sing-box/"
 
   project_dir="$(cd "$(dirname "$PROJECT")" && pwd)"
-  icon_candidate="$project_dir/v2rayN.png"
-  [[ -f "$icon_candidate" ]] && cp "$icon_candidate" "$stage/usr/share/icons/hicolor/256x256/apps/v2rayn.png" || true
+  icon_candidate="$project_dir/sing-box.png"
+  [[ -f "$icon_candidate" ]] && cp "$icon_candidate" "$stage/usr/share/icons/hicolor/256x256/apps/sing-box.png" || true
 
-  stage_runtime_assets "$stage/opt/v2rayN" "$rid"
+  stage_runtime_assets "$stage/opt/sing-box" "$rid"
   write_launcher_file "$stage"
   write_desktop_file "$stage"
   write_maintainer_scripts "$debian_dir"
@@ -599,15 +599,15 @@ package_binary() {
   
   mkdir -p "$workdir/debian"
   cat > "$workdir/debian/control" <<EOF
-Source: v2rayn
+Source: sing-box
 Section: net
 Priority: optional
 Maintainer: 2dust <noreply@github.com>
 Standards-Version: 4.7.0
 
-Package: v2rayn
+Package: sing-box
 Architecture: ${deb_arch}
-Description: v2rayN
+Description: sing-box
 EOF
 
   multiarch="$(dpkg-architecture -a"$deb_arch" -qDEB_HOST_MULTIARCH)"
@@ -617,14 +617,14 @@ EOF
   : > "$debian_dir/substvars"
 
   mapfile -t ELF_FILES < <(
-    find "$stage/opt/v2rayN" -type f \( -name "*.so*" -o -perm -111 \) ! -name 'libcoreclrtraceptprovider.so'
+    find "$stage/opt/sing-box" -type f \( -name "*.so*" -o -perm -111 \) ! -name 'libcoreclrtraceptprovider.so'
   )
 
   if [[ "${#ELF_FILES[@]}" -gt 0 ]]; then
     (
       cd "$workdir"
       dpkg-shlibdeps \
-        -l"$stage/opt/v2rayN" \
+        -l"$stage/opt/sing-box" \
         -l"$sys_libdir" \
         -l"$sys_usrlibdir" \
         -T"$debian_dir/substvars" \
@@ -645,7 +645,7 @@ EOF
   fi
 
   cat > "$debian_dir/control" <<EOF
-Package: v2rayn
+Package: sing-box
 Version: ${VERSION}
 Architecture: ${deb_arch}
 Maintainer: 2dust <noreply@github.com>
@@ -653,16 +653,16 @@ Homepage: https://github.com/2dust/v2rayN
 Section: net
 Priority: optional
 Depends: ${final_depends}
-Description: v2rayN (Avalonia) GUI client for Linux
+Description: sing-box (Avalonia) GUI client for Linux
  Support vless / vmess / Trojan / http / socks / Anytls / Hysteria2 /
  Shadowsocks / tuic / WireGuard.
 EOF
 
-  find "$stage/opt/v2rayN" -type d -exec chmod 0755 {} +
-  find "$stage/opt/v2rayN" -type f -exec chmod 0644 {} +
-  [[ -f "$stage/opt/v2rayN/v2rayN" ]] && chmod 0755 "$stage/opt/v2rayN/v2rayN" || true
+  find "$stage/opt/sing-box" -type d -exec chmod 0755 {} +
+  find "$stage/opt/sing-box" -type f -exec chmod 0644 {} +
+  [[ -f "$stage/opt/sing-box/sing-box" ]] && chmod 0755 "$stage/opt/sing-box/sing-box" || true
 
-  deb_out="$OUTPUT_DIR/v2rayn_${VERSION}_${deb_arch}.deb"
+  deb_out="$OUTPUT_DIR/sing-box_${VERSION}_${deb_arch}.deb"
   dpkg-deb --root-owner-group --build "$stage" "$deb_out"
 
   echo "Build done for $short. DEB at:"

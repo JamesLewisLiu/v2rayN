@@ -1,0 +1,32 @@
+[Unit]
+Description=sing-box Web API
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=sing-box
+Group=sing-box
+WorkingDirectory=/opt/sing-box-web
+ExecStart=/opt/sing-box-web/sing-box.WebAPI --foreground
+EnvironmentFile=/etc/sing-box-web.env
+Environment=ASPNETCORE_URLS=http://0.0.0.0:5080
+Environment=SING_BOX_WEB_AUTOSTART=true
+Environment=SING_BOX_DATA_HOME=/var/lib/sing-box-web
+Environment=DOTNET_BUNDLE_EXTRACT_BASE_DIR=/var/lib/sing-box-web/.net-bundle
+StateDirectory=sing-box-web
+StateDirectoryMode=0750
+UMask=0077
+Restart=always
+RestartSec=3
+KillSignal=SIGTERM
+SendSIGKILL=no
+TimeoutStopSec=30s
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/sing-box-web
+
+[Install]
+WantedBy=multi-user.target

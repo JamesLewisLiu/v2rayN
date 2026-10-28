@@ -9,7 +9,7 @@ on:
       project:
         required: false
         type: string
-        default: './v2rayN.Desktop/v2rayN.Desktop.csproj'
+        default: './sing-box.Desktop/sing-box.Desktop.csproj'
 
 jobs:
   build:
@@ -73,14 +73,14 @@ jobs:
       with:
         dotnet-version: 10.0.1xx
         
-    - name: Build v2rayN
+    - name: Build sing-box
       shell: bash
-      working-directory: ./v2rayN
+      working-directory: ./sing-box
       run: dotnet publish $Project -c Release -r $RID -p:SelfContained=true $ExtOpt -o $Output
 
     - name: Build AmazTool
       shell: bash
-      working-directory: ./v2rayN
+      working-directory: ./sing-box
       run: dotnet publish ./AmazTool/AmazTool.csproj -c Release -r $RID -p:SelfContained=true -p:PublishTrimmed=true $ExtOpt -o $Output
 
     - name: Remove Debug Symbols

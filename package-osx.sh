@@ -4,19 +4,19 @@ Arch="$1"
 OutputPath="$2"
 Version="$3"
 
-FileName="v2rayN-${Arch}.zip"
+FileName="sing-box-${Arch}.zip"
 wget -nv -O $FileName "https://github.com/2dust/v2rayN-core-bin/raw/refs/heads/master/$FileName"
 7z x $FileName
-cp -rf v2rayN-${Arch}/* $OutputPath
+cp -rf sing-box-${Arch}/* $OutputPath
 
-PackagePath="v2rayN-Package-${Arch}"
-mkdir -p "$PackagePath/v2rayN.app/Contents/Resources"
-cp -rf "$OutputPath" "$PackagePath/v2rayN.app/Contents/MacOS"
-cp -f "$PackagePath/v2rayN.app/Contents/MacOS/v2rayN.icns" "$PackagePath/v2rayN.app/Contents/Resources/AppIcon.icns"
-echo "When this file exists, app will not store configs under this folder" > "$PackagePath/v2rayN.app/Contents/MacOS/NotStoreConfigHere.txt"
-chmod +x "$PackagePath/v2rayN.app/Contents/MacOS/v2rayN"
+PackagePath="sing-box-Package-${Arch}"
+mkdir -p "$PackagePath/sing-box.app/Contents/Resources"
+cp -rf "$OutputPath" "$PackagePath/sing-box.app/Contents/MacOS"
+cp -f "$PackagePath/sing-box.app/Contents/MacOS/sing-box.icns" "$PackagePath/sing-box.app/Contents/Resources/AppIcon.icns"
+echo "When this file exists, app will not store configs under this folder" > "$PackagePath/sing-box.app/Contents/MacOS/NotStoreConfigHere.txt"
+chmod +x "$PackagePath/sing-box.app/Contents/MacOS/sing-box"
 
-cat >"$PackagePath/v2rayN.app/Contents/Info.plist" <<-EOF
+cat >"$PackagePath/sing-box.app/Contents/Info.plist" <<-EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -34,17 +34,17 @@ cat >"$PackagePath/v2rayN.app/Contents/Info.plist" <<-EOF
     <string>hu</string>
   </array>
   <key>CFBundleDisplayName</key>
-  <string>v2rayN</string>
+  <string>sing-box</string>
   <key>CFBundleExecutable</key>
-  <string>v2rayN</string>
+  <string>sing-box</string>
   <key>CFBundleIconFile</key>
   <string>AppIcon</string>
   <key>CFBundleIconName</key>
   <string>AppIcon</string>
   <key>CFBundleIdentifier</key>
-  <string>2dust.v2rayN</string>
+  <string>2dust.sing-box</string>
   <key>CFBundleName</key>
-  <string>v2rayN</string>
+  <string>sing-box</string>
   <key>CFBundlePackageType</key>
   <string>APPL</string>
   <key>CFBundleShortVersionString</key>
@@ -60,11 +60,11 @@ cat >"$PackagePath/v2rayN.app/Contents/Info.plist" <<-EOF
 EOF
 
 create-dmg \
-    --volname "v2rayN Installer" \
+    --volname "sing-box Installer" \
     --window-size 700 420 \
     --icon-size 100 \
-    --icon "v2rayN.app" 160 185 \
-    --hide-extension "v2rayN.app" \
+    --icon "sing-box.app" 160 185 \
+    --hide-extension "sing-box.app" \
     --app-drop-link 500 185 \
-    "v2rayN-${Arch}.dmg" \
-    "$PackagePath/v2rayN.app"
+    "sing-box-${Arch}.dmg" \
+    "$PackagePath/sing-box.app"

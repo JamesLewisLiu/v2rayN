@@ -1,0 +1,26 @@
+services:
+  sing-box-web:
+    build:
+      context: ../..
+      dockerfile: sing-box/sing-box.WebAPI/Containerfile
+      args:
+        RID: ${SING_BOX_BUILD_RID:-linux-x64}
+    image: localhost/sing-box-web:latest
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_URLS: http://0.0.0.0:5080
+      SING_BOX_WEB_API_KEY: ${SING_BOX_WEB_API_KEY:?Set SING_BOX_WEB_API_KEY in your environment}
+      SING_BOX_WEB_ALLOWED_ORIGINS: ${SING_BOX_WEB_ALLOWED_ORIGINS:-}
+      SING_BOX_WEB_AUTOSTART: "true"
+      SING_BOX_WEB_PROXY_PORT: ${SING_BOX_PROXY_PORT:-10808}
+      SING_BOX_WEB_PROXY_LISTEN_ALL: "true"
+      SING_BOX_DATA_HOME: /data
+    ports:
+      - "127.0.0.1:${SING_BOX_WEB_PORT:-5080}:5080/tcp"
+      - "127.0.0.1:${SING_BOX_PROXY_PORT:-10808}:${SING_BOX_PROXY_PORT:-10808}/tcp"
+      - "127.0.0.1:${SING_BOX_PROXY_PORT:-10808}:${SING_BOX_PROXY_PORT:-10808}/udp"
+    volumes:
+      - sing-box-data:/data
+
+volumes:
+  sing-box-data:
